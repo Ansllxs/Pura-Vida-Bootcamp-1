@@ -7,12 +7,14 @@ import { OrbitGraphic } from './components/OrbitMark'
 import { Sidebar } from './components/Sidebar'
 import { WalletControl } from './components/WalletControl'
 import { useLanguage } from './i18n/useLanguage'
+import { useNativeBalance } from './wallet/useBalance'
 import { useVarial } from './wallet/useVarial'
 import './App.css'
 
 function App() {
   const { t } = useLanguage()
   const { wallet, connect, disconnect } = useVarial()
+  const balance = useNativeBalance(wallet)
   const [active, setActive] = useState('overview')
 
   function navigate(id) {
@@ -52,7 +54,7 @@ function App() {
             <OrbitGraphic className="orbit" />
           </section>
           <div className="dossier">
-            <BalanceCard wallet={wallet} />
+            <BalanceCard wallet={wallet} balance={balance} />
             <GoalsSection />
           </div>
         </div>

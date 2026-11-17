@@ -1,5 +1,6 @@
 import { SpaceField } from './OrbitMark'
 import { useLanguage } from '../i18n/useLanguage'
+import { formatNativeBalance } from '../wallet/balance'
 import { abbreviateAddress } from '../wallet/network'
 
 function statusText(wallet, t) {
@@ -14,9 +15,20 @@ function statusText(wallet, t) {
   return t.walletStatus
 }
 
-export function BalanceCard({ wallet }) {
-  const { t } = useLanguage()
+function balanceNotice(balance, t) {
+  if (balance.status === 'loading') return t.balanceLoading
+  if (balance.status === 'unfunded') return t.balanceUnfunded
+  if (balance.status === 'invalid') return t.balanceInvalid
+  if (balance.status === 'error') return t.balanceError
+  return ''
+}
+
+export function BalanceCard({ wallet, balance }) {
+  const { t, lang } = useLanguage()
   const wrongNetwork = wallet.phase === 'ready' && !wallet.testnet
+  const current = balance.address === wallet.address && wallet.phase === 'ready' && wallet.testnet
+  const amount = current && balance.status === 'ready' ? formatNativeBalance(balance.amount, lang) : ''
+  const notice = current ? balanceNotice(balance, t) : ''
 
   return (
     <section className="balance" aria-labelledby="balance-label">
@@ -24,13 +36,30 @@ export function BalanceCard({ wallet }) {
         <p id="balance-label" className="kicker">
           {t.balanceLabel}
         </p>
-        <p className="balance__amount">
-          <span>{t.balanceEmpty}</span>
+        <p className="balance__amount" aria-label={amount ? `${amount.text} XLM` : undefined}>
+          <span className="balance__whole">{amount ? amount.whole : t.balanceEmpty}</span>
+          {amount?.fraction ? <span className="balance__fraction">{amount.fraction}</span> : null}
           <span className="balance__unit">XLM</span>
         </p>
         <p className="balance__status" role="status">
           {statusText(wallet, t)}
         </p>
+        {notice ? (
+          <p className="balance__warn" role="status">
+            {notice}
+          </p>
+        ) : null}
+        {amount ? <p className="balance__note">{t.balanceNote}</p> : null}
+        {current ? (
+          <button
+            type="button"
+            className="btn balance__refresh"
+            onClick={balance.refresh}
+            disabled={balance.status === 'loading'}
+          >
+            {t.balanceRefresh}
+          </button>
+        ) : null}
         {wrongNetwork ? <p className="balance__warn">{t.walletWrongNetworkHint}</p> : null}
         {wallet.phase === 'missing' ? <p className="balance__warn">{t.walletInstallHint}</p> : null}
       </div>
