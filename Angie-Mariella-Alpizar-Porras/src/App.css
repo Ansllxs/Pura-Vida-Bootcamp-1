@@ -102,7 +102,9 @@
 .network,
 .kicker,
 .goal__index,
-.goal__target,
+.goal__figures,
+.goal__percent,
+.goal__history,
 .activity__empty,
 .field label,
 .field__hint {
@@ -358,11 +360,13 @@
   grid-template-columns: 42px minmax(0, 1fr) auto;
   grid-template-areas:
     'index name actions'
-    'index target target';
+    'index figures figures'
+    'index meter percent'
+    'index history history';
   column-gap: 12px;
   row-gap: 8px;
   align-items: center;
-  padding: 14px 0;
+  padding: 14px 0 10px;
   border-top: 1px solid var(--line);
 }
 
@@ -385,23 +389,76 @@
   text-transform: uppercase;
 }
 
-.goal__target {
-  grid-area: target;
+.goal__figures {
+  grid-area: figures;
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 6px 16px;
+  margin: 0;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
 }
 
-.goal__target span {
+.goal__key {
+  margin-right: 8px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.goal__track {
+  grid-area: meter;
+  height: 10px;
+  background: var(--black);
+}
+
+.goal__fill {
+  display: block;
+  height: 100%;
+  background: var(--lime);
+}
+
+.goal__percent {
+  grid-area: percent;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: right;
+}
+
+.goal__history {
+  grid-area: history;
+  margin-top: 4px;
+}
+
+.goal__history-title,
+.goal__history-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.goal__history ul {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+
+.goal__history li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.75rem;
 }
 
 .goal__actions {
   grid-area: actions;
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
 }
@@ -639,7 +696,10 @@
     grid-template-columns: 36px minmax(0, 1fr);
     grid-template-areas:
       'index name'
-      'index target'
+      'figures figures'
+      'meter meter'
+      'percent percent'
+      'history history'
       'actions actions';
   }
 
@@ -647,9 +707,11 @@
     font-size: 1.25rem;
   }
 
-  .goal__target,
+  .goal__figures,
+  .goal__percent,
   .goal__actions {
     justify-content: flex-start;
+    text-align: left;
   }
 
   .goal__actions .btn {
