@@ -101,11 +101,11 @@
 
 .network,
 .kicker,
-.demo,
 .goal__index,
-.goal__percent,
 .goal__target,
-.activity__empty {
+.activity__empty,
+.field label,
+.field__hint {
   font-family: var(--mono);
 }
 
@@ -341,13 +341,24 @@
   padding: 0;
 }
 
+.goals__empty {
+  padding: 18px 0 8px;
+  border-top: 1px solid var(--line);
+}
+
+.goals__empty-title {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
 .goal {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr) auto;
   grid-template-areas:
-    'index name target'
-    'index bar percent'
-    'index action action';
+    'index name actions'
+    'index target target';
   column-gap: 12px;
   row-gap: 8px;
   align-items: center;
@@ -363,62 +374,111 @@
   letter-spacing: 0.06em;
 }
 
-.goal__name {
-  grid-area: name;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  min-width: 0;
-}
-
 .goal h3 {
+  grid-area: name;
+  min-width: 0;
   font-size: 1.45rem;
   font-weight: 500;
   letter-spacing: -0.04em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.demo {
-  flex: none;
-  padding: 2px 5px 1px;
-  border: 1px solid var(--ink);
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
 }
 
 .goal__target {
   grid-area: target;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
-  text-align: right;
 }
 
-.goal__track {
-  grid-area: bar;
-  height: 2px;
-  background: #d5d1c8;
+.goal__target span {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.goal__fill {
-  display: block;
-  width: 0%;
-  height: 100%;
-  background: var(--ink);
+.goal__actions {
+  grid-area: actions;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
-.goal__percent {
-  grid-area: percent;
-  font-size: 0.75rem;
-  text-align: right;
+.goal-dialog {
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  margin: auto;
+  padding: 22px;
+  overflow: auto;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
 }
 
-.btn--detail {
-  grid-area: action;
-  justify-self: end;
-  min-height: 32px;
-  padding: 0 10px;
+.goal-dialog::backdrop {
+  background: rgba(16, 16, 16, 0.46);
+}
+
+.goal-form__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.goal-dialog h3 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.field label {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field input {
+  width: 100%;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--cream);
+  color: var(--ink);
+  padding: 12px;
+  font: inherit;
+}
+
+.field__hint,
+.field__error {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.field__hint {
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+.field__error {
+  color: #7a1d1d;
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 22px;
 }
 
 .activity {
@@ -571,7 +631,7 @@
     flex-direction: column;
   }
 
-  .btn--line {
+  .goals__head .btn--line {
     width: 100%;
   }
 
@@ -580,8 +640,7 @@
     grid-template-areas:
       'index name'
       'index target'
-      'bar bar'
-      'percent action';
+      'actions actions';
   }
 
   .goal h3 {
@@ -589,8 +648,20 @@
   }
 
   .goal__target,
-  .goal__percent {
-    text-align: left;
+  .goal__actions {
+    justify-content: flex-start;
+  }
+
+  .goal__actions .btn {
+    flex: 1;
+  }
+
+  .dialog__actions {
+    flex-direction: column-reverse;
+  }
+
+  .dialog__actions .btn {
+    width: 100%;
   }
 
   .activity {
