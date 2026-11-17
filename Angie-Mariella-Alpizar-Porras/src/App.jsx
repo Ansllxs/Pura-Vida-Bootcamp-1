@@ -5,11 +5,14 @@ import { GoalsSection } from './components/GoalsSection'
 import { LanguageSwitch } from './components/LanguageSwitch'
 import { OrbitGraphic } from './components/OrbitMark'
 import { Sidebar } from './components/Sidebar'
+import { WalletControl } from './components/WalletControl'
 import { useLanguage } from './i18n/useLanguage'
+import { useVarial } from './wallet/useVarial'
 import './App.css'
 
 function App() {
   const { t } = useLanguage()
+  const { wallet, connect, disconnect } = useVarial()
   const [active, setActive] = useState('overview')
 
   function navigate(id) {
@@ -28,9 +31,7 @@ function App() {
           </p>
           <div className="topbar__actions">
             <LanguageSwitch />
-            <button type="button" className="btn btn--solid">
-              {t.connect}
-            </button>
+            <WalletControl wallet={wallet} onConnect={connect} onDisconnect={disconnect} />
           </div>
         </header>
         <div className="stage">
@@ -51,7 +52,7 @@ function App() {
             <OrbitGraphic className="orbit" />
           </section>
           <div className="dossier">
-            <BalanceCard />
+            <BalanceCard wallet={wallet} />
             <GoalsSection />
           </div>
         </div>
